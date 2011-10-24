@@ -1,0 +1,143 @@
+/** Variables **/
+/***************/
+
+border-color = #aaa
+
+/** Common Functions **/
+/**********************/
+
+vendor(prop, args)
+  -webkit-{prop} args
+  -moz-{prop} args
+  {prop} args
+
+box-shadow()
+  vendor(box-shadow, arguments)
+  html.ie8 &,
+  html.ie7 &,
+  html.ie6 &
+    border 2px solid arguments[length(arguments) - 1]
+
+border-radius()
+  vendor('border-radius', arguments)
+
+background-linear-gradient(startPoint, startColor, startInterval, endColor, endInterval, deprecatedWebkitStartPoint = false, deprecatedWebkitEndPoint = false)
+  background-color startColor
+  if deprecatedWebkitStartPoint && deprecatedWebkitEndPoint
+    background-image -webkit-gradient(linear, deprecatedWebkitStartPoint, deprecatedWebkitEndPoint, color-stop(startInterval, startColor), color-stop(endInterval, endColor))
+  background-image -webkit-linear-gradient(startPoint, startColor startInterval, endColor endInterval)
+  background-image -moz-linear-gradient(startPoint, startColor startInterval, endColor endInterval)
+  background-image -ms-linear-gradient(startPoint, startColor startInterval, endColor endInterval)
+  background-image -o-linear-gradient(startPoint, startColor startInterval, endColor endInterval)
+  background-image linear-gradient(startPoint, startColor startInterval, endColor endInterval)
+
+button-gradient(color, lightenAmount = 10)
+  background-linear-gradient(top, lighten(color,lightenAmount), 0%, color, 100%, top left, bottom left)
+
+
+/** Basic Layout **/
+/******************/
+
+html
+  background-color #ccc
+
+body
+  position relative
+  width 56em
+  margin 0 auto
+  border 1px solid border-color
+  border-width 0 1px
+  background-color #fff
+  padding 2em
+  box-shadow(0 0 1.25em 1.25em border-color)
+
+
+/** Typography **/
+/****************/
+
+html
+input
+textarea
+select
+  font: 1em/1.5 "Lucida Grande", Helvetica, Arial, sans-serif;
+  color #333
+
+h1, h2, h3, h4, h5, h6
+  font-weight bold
+  margin-bottom 1em
+
+p
+  margin-bottom 0.5em
+
+h1
+  font-size 2.5em /* 40px */
+h2
+  font-size 2em   /* 32px */
+h3
+  font-size 1.75em /* 28px */
+h4
+  font-size 1.5em /* 24px */  
+h5
+  font-size 1.25em /* 20px */
+h6
+  font-size 1em /* 16px */
+
+a
+  color #00B7FF
+  &:hover
+    color darken(#00B7FF, 10)
+
+#footer
+  text-align right
+
+/** Forms **/
+/***********/
+
+form
+  margin 1em 0
+  
+  input, select, textarea
+    border 1px solid border-color
+    border-radius 0.3em
+    padding: 0.3em
+    display block
+    vendor(box-sizing, border-box)
+
+  option
+    padding 0.3em
+  
+  label
+    display block
+    clear left
+    margin-bottom 1em
+
+    span
+      float left
+      padding 0.5em 1em 0.4em 0
+      width 10em
+      text-align right
+    
+    input[type=text], input[type=password], select, textarea
+      width 10em
+      
+      &.big
+        width 16em
+      &.small
+        width 4em
+
+  button
+  a.button
+  input[type=submit]
+  input[type=button]
+    border-radius 0.5em
+    background-linear-gradient(top, #eee, 20%, #acacac, 100%)
+    background-color #eee
+    border 1px solid border-color
+    padding 0.3em 0.6em
+    margin-left 11em
+    &:hover
+      background darken(#aaa, 10)
+      background-linear-gradient(top, #ddd, 20%, #fff, 100%)
+      cursor pointer
+    &::-moz-focus-inner
+      border 0

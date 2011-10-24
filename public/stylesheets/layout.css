@@ -1,0 +1,167 @@
+/** Variables **/
+/***************/
+/** Common Functions **/
+/**********************/
+/** Basic Layout **/
+/******************/
+html {
+  background-color: #ccc;
+}
+body {
+  position: relative;
+  width: 56em;
+  margin: 0 auto;
+  border: 1px solid #aaa;
+  border-width: 0 1px;
+  background-color: #fff;
+  padding: 2em;
+  -webkit-box-shadow: 0 0 1.25em 1.25em #aaa;
+  -moz-box-shadow: 0 0 1.25em 1.25em #aaa;
+  box-shadow: 0 0 1.25em 1.25em #aaa;
+}
+html.ie8 body,
+html.ie7 body,
+html.ie6 body {
+  border: 2px solid #aaa;
+}
+/** Typography **/
+/****************/
+html,
+input,
+textarea,
+select {
+  font: 1em/1.5 "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: #333;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+p {
+  margin-bottom: 0.5em;
+}
+h1 {
+  font-size: 2.5em;
+/* 40px */
+}
+h2 {
+  font-size: 2em;
+/* 32px */
+}
+h3 {
+  font-size: 1.75em;
+/* 28px */
+}
+h4 {
+  font-size: 1.5em;
+/* 24px */
+}
+h5 {
+  font-size: 1.25em;
+/* 20px */
+}
+h6 {
+  font-size: 1em;
+/* 16px */
+}
+a {
+  color: #00b7ff;
+}
+a:hover {
+  color: #0092cc;
+}
+#footer {
+  text-align: right;
+}
+/** Forms **/
+/***********/
+form {
+  margin: 1em 0;
+}
+form input,
+form select,
+form textarea {
+  border: 1px solid #aaa;
+  -webkit-border-radius: 0.3em;
+  -moz-border-radius: 0.3em;
+  border-radius: 0.3em;
+  padding: 0.3em;
+  display: block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+form option {
+  padding: 0.3em;
+}
+form label {
+  display: block;
+  clear: left;
+  margin-bottom: 1em;
+}
+form label span {
+  float: left;
+  padding: 0.5em 1em 0.4em 0;
+  width: 10em;
+  text-align: right;
+}
+form label input[type=text],
+form label input[type=password],
+form label select,
+form label textarea {
+  width: 10em;
+}
+form label input[type=text].big,
+form label input[type=password].big,
+form label select.big,
+form label textarea.big {
+  width: 16em;
+}
+form label input[type=text].small,
+form label input[type=password].small,
+form label select.small,
+form label textarea.small {
+  width: 4em;
+}
+form button,
+form a.button,
+form input[type=submit],
+form input[type=button] {
+  -webkit-border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+  border-radius: 0.5em;
+  background-color: #eee;
+  background-image: -webkit-linear-gradient(top, #eee 20%, #acacac 100%);
+  background-image: -moz-linear-gradient(top, #eee 20%, #acacac 100%);
+  background-image: -ms-linear-gradient(top, #eee 20%, #acacac 100%);
+  background-image: -o-linear-gradient(top, #eee 20%, #acacac 100%);
+  background-image: linear-gradient(top, #eee 20%, #acacac 100%);
+  background-color: #eee;
+  border: 1px solid #aaa;
+  padding: 0.3em 0.6em;
+  margin-left: 11em;
+}
+form button:hover,
+form a.button:hover,
+form input[type=submit]:hover,
+form input[type=button]:hover {
+  background: #909090;
+  background-color: #ddd;
+  background-image: -webkit-linear-gradient(top, #ddd 20%, #fff 100%);
+  background-image: -moz-linear-gradient(top, #ddd 20%, #fff 100%);
+  background-image: -ms-linear-gradient(top, #ddd 20%, #fff 100%);
+  background-image: -o-linear-gradient(top, #ddd 20%, #fff 100%);
+  background-image: linear-gradient(top, #ddd 20%, #fff 100%);
+  cursor: pointer;
+}
+form button::-moz-focus-inner,
+form a.button::-moz-focus-inner,
+form input[type=submit]::-moz-focus-inner,
+form input[type=button]::-moz-focus-inner {
+  border: 0;
+}
