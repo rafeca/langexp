@@ -8,7 +8,7 @@ var TagSchema = new Schema({
 });
 
 var SnippetSchema = new Schema({
-  creatorId: ObjectId,
+  creatorId: {type: ObjectId, ref: 'User'},
   name: String,
   description: String,
   code: String,
@@ -27,11 +27,11 @@ var SnippetBackend = function() {
   var public = {
     
     findById: function(snippetId, callback){
-      Snippet.findOne({_id: snippetId}, callback);
+      Snippet.findOne({_id: snippetId}).populate('creatorId').exec(callback);
     },
     
     findByCreator: function(creatorId, callback){
-      Snippet.find({creatorId: creatorId}, callback);
+      Snippet.find({creatorId: creatorId}).populate('creatorId').exec(callback);
     },
     
     // Creates a new Code Snippet in DB
@@ -71,7 +71,7 @@ var SnippetBackend = function() {
     },
     
     findRecent: function(numItems, callback) {
-      Snippet.find({}).limit(numItems).desc('age').exec(callback);
+      Snippet.find({}).populate('creatorId').limit(numItems).desc('age').exec(callback);
     }
   };
   

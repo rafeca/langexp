@@ -3,6 +3,10 @@ link(rel='stylesheet', href='/stylesheets/snippet.css')
 h2= snippet.name
 
 p
+  strong Creator: 
+  a(href='/user/#{snippet.creatorId.username}')=snippet.creatorId.username
+
+p
   strong Description: 
   =snippet.description
 p

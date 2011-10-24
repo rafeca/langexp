@@ -6,6 +6,6 @@ ul#recentSnippets
     li 
       a(href='/snippet/#{snippet._id}')= snippet.name 
       span(class='date') &nbsp;#{snippet.date}
-      by #{snippet.}
+      a(href='/user/#{snippet.creatorId.username}', class='owner') by #{snippet.creatorId.username}
   
   

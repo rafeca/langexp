@@ -92,7 +92,7 @@ app.post('/login', function(req, res){
       // Store user into session
       req.session.user = data;
       req.flash('info', 'You have logged in successfully');
-      res.redirect('/dashboard');
+      res.redirect('/user/' + req.session.user.username);
     }
   });
 });
@@ -106,32 +106,29 @@ app.get('/snippet/:id', function(req, res){
       req.flash('error', 'This Snippet does not exist');
       res.redirect('/');
     } else {
-      console.log(data);
       res.render('snippet', {snippet: data});
     }
   });
 });
 
-app.get('/dashboard', function(req, res){
-  if (typeof req.session.user === 'undefined' || req.session.user === null) {
-    req.flash('error', 'You have to login to access this page');
-    res.redirect('/');
-    return;
-  }
-  
-  Backend.Snippet.findByCreator(req.session.user._id, function(err, snippets){
-    if (err) {
-      req.flash('error', err);
+app.get('/user/:username', function(req, res){
+  var username = req.params.username;
+
+  Backend.User.findByUsername(username, function(err, user){  
+    if (!user) {
+      req.flash('error', 'This user does not exist');
       res.redirect('/');
       return;
     }
-    
-    var activity = [];
-    Backend.User.findByUsername(req.session.user.username, function(err, user){
-      if (err === null) {
-        activity = user.activities;
+
+    Backend.Snippet.findByCreator(user._id, function(err, snippets){
+      if (err) {
+        req.flash('error', err);
+        res.redirect('/');
+        return;
       }
-      res.render('dashboard', {snippets: snippets, activity: activity});
+    
+      res.render('profile', {snippets: snippets, user: user});
     });
   });
 });
@@ -160,7 +157,7 @@ app.post('/create_message', function(req, res){
         return;
       }
       
-      res.redirect('/dashboard');
+      res.redirect('/user/' + req.body.destination);
     });
   });
 });
