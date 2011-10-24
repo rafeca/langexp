@@ -90,6 +90,9 @@ pre {
 #footer {
   text-align: right;
 }
+.clear {
+  clear: both;
+}
 /** Forms **/
 /***********/
 form {

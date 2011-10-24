@@ -92,7 +92,7 @@ app.post('/login', function(req, res){
       // Store user into session
       req.session.user = data;
       req.flash('info', 'You have logged in successfully');
-      res.redirect('/');
+      res.redirect('/dashboard');
     }
   });
 });
@@ -109,6 +109,85 @@ app.get('/snippet/:id', function(req, res){
       console.log(data);
       res.render('snippet', {snippet: data});
     }
+  });
+});
+
+app.get('/dashboard', function(req, res){
+  if (typeof req.session.user === 'undefined' || req.session.user === null) {
+    req.flash('error', 'You have to login to access this page');
+    res.redirect('/');
+    return;
+  }
+  
+  Backend.Snippet.findByCreator(req.session.user._id, function(err, snippets){
+    if (err) {
+      req.flash('error', err);
+      res.redirect('/');
+      return;
+    }
+    
+    var activity = [];
+    Backend.User.findByUsername(req.session.user.username, function(err, user){
+      if (err === null) {
+        activity = user.activities;
+      }
+      res.render('dashboard', {snippets: snippets, activity: activity});
+    });
+  });
+});
+
+
+app.post('/create_message', function(req, res){
+  if (typeof req.session.user === 'undefined' || req.session.user === null) {
+    req.flash('error', 'You have to login to access this page');
+    res.redirect('/');
+    return;
+  }
+  
+  // Get destination user
+  Backend.User.findByUsername(req.body.destination, function(err, destination){
+    
+    if (destination === null) {
+      req.flash('error', 'The destination user does not exist');
+      res.redirect('/');
+      return;
+    }
+    
+    Backend.User.addActivity(destination, 'comment', req.body.text, req.session.user._id, null, function(err){
+      if (err) {
+        req.flash('error', err);
+        res.redirect('/');
+        return;
+      }
+      
+      res.redirect('/dashboard');
+    });
+  });
+});
+
+app.get('/new_snippet', function(req, res){
+  res.render('new_snippet');
+});
+
+app.post('/new_snippet', function(req, res){
+  
+  // Parse tags
+  var tagsArray = req.body.tags.split(',');
+  
+  Backend.Snippet.create(
+    req.session.user._id, 
+    req.body.name,
+    req.body.description, 
+    req.body.code,
+    tagsArray,
+    function(err, snippet){
+      if(err) {
+        req.flash('error', err);
+        res.redirect('/');
+        return;
+      }
+      req.flash('info', "Snippet created successfuly");
+      res.redirect('/snippet/' + snippet._id);
   });
 });
 

@@ -12,7 +12,7 @@ var TagActivitySchema = new Schema({
 });
 
 var TagSchema = new Schema({
-  name: String,
+  name: {type: String, trim: true},
   activities: [TagActivitySchema]
 });
 

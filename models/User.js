@@ -74,13 +74,13 @@ var UserBackend = function() {
       });
     },
     
-    addActivity: function(user, type, text, origin, referenceId, callback){      
+    addActivity: function(user, type, text, originId, referenceId, callback){      
       
       var activity = new UserActivity({
         type: type,
         text: text,
         date: new Date(),
-        origin: origin,
+        origin: originId,
         referenceId: referenceId
       });
       

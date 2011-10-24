@@ -8,6 +8,7 @@ var TagSchema = new Schema({
 });
 
 var SnippetSchema = new Schema({
+  creatorId: ObjectId,
   name: String,
   description: String,
   code: String,
@@ -29,8 +30,12 @@ var SnippetBackend = function() {
       Snippet.findOne({_id: snippetId}, callback);
     },
     
+    findByCreator: function(creatorId, callback){
+      Snippet.find({creatorId: creatorId}, callback);
+    },
+    
     // Creates a new Code Snippet in DB
-    create: function(name, description, code, tags, callback){
+    create: function(creatorId, name, description, code, tags, callback){
       
       // Find tags and create them if they don't exist yet
       var foundTags = [];
@@ -46,6 +51,7 @@ var SnippetBackend = function() {
           if (foundTags.length === tags.length) {
 
             var snippet = new Snippet({
+              creatorId: creatorId,
               name: name,
               description: description,
               code: code,

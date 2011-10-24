@@ -1,0 +1,21 @@
+
+h2 Create a new Snippet
+
+form(action='/new_snippet', method='post')
+
+  label
+    span Name
+    input(type='text', name='name')
+  label
+    span Description
+    input(type='text',name='description')
+  label
+    span Code
+    textarea(name='code')
+    
+  label
+    span Tags (comma-separated)
+    input(type='text',name='tags')
+
+  label
+    input(type='submit',value='Create Snippet')

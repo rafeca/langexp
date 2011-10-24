@@ -1,0 +1,40 @@
+link(rel='stylesheet', href='/stylesheets/dashboard.css')
+
+form(action='/create_message', method='post')
+
+  input(type='hidden',name='destination',value=session.user.username)
+  
+  label
+    span Post some activity in my wall
+    br
+    input(type='text', name='text', class="big")
+    input(type='submit',value='Post')
+
+#myActivity
+
+  h3 My public activity
+
+  ul
+    each item in activity
+      li
+        - if (item.type !== 'comment')
+          a(href='/snippet/#{item.referenceId}')= item.type 
+        - else
+          #{item.type}
+        span(class='text') &nbsp;#{item.text} 
+        br
+        span(class='date') &nbsp;#{item.date}
+
+#mySnippets
+  h3
+    My coderz snippets
+
+  ul#recentSnippets
+    each snippet in snippets
+      li 
+        a(href='/snippet/#{snippet._id}')= snippet.name 
+        span(class='date') &nbsp;#{snippet.date}
+
+  a(href='/new_snippet', class='createSnippet') New snippet
+
+.clear
