@@ -87,6 +87,16 @@ a
   &:hover
     color darken(#00B7FF, 10)
 
+strong
+  font-weight bold
+
+pre
+  font-family 'Bitstream Vera Sans Mono','Courier',monospace
+  padding 2em
+  border 1px solid #999
+  border-radius(1em)
+  margin-top 2em
+
 #footer
   text-align right
 
@@ -135,9 +145,47 @@ form
     border 1px solid border-color
     padding 0.3em 0.6em
     margin-left 11em
+    text-decoration none
+    color #333
     &:hover
       background darken(#aaa, 10)
       background-linear-gradient(top, #ddd, 20%, #fff, 100%)
       cursor pointer
     &::-moz-focus-inner
       border 0
+
+/** Flash messages **/
+/********************/
+
+#messages
+  
+  ul
+    padding 0.5em
+    border-radius(5px)
+
+  .error
+    background-color lighten(red, 30)
+    
+  .info
+    background-color lighten(green, 60)
+      
+      
+/** Login Box **/
+/***************/
+
+form#login
+
+  font-size 0.8em
+  position absolute
+  right 0
+  top 0
+  width 24em
+  
+  label
+    margin-bottom 0.5em
+
+#logged
+
+  position absolute
+  right 2em
+  top 2em

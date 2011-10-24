@@ -26,7 +26,7 @@ var SnippetBackend = function() {
   var public = {
     
     findById: function(snippetId, callback){
-      Snippet.find({_id: snippetId}, callback);
+      Snippet.findOne({_id: snippetId}, callback);
     },
     
     // Creates a new Code Snippet in DB
@@ -62,6 +62,10 @@ var SnippetBackend = function() {
     
     remove: function(snippetId, callback) {
       Snippet.remove({_id: snippetId}, callback);
+    },
+    
+    findRecent: function(numItems, callback) {
+      Snippet.find({}).limit(numItems).desc('age').exec(callback);
     }
   };
   

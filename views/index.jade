@@ -1,23 +1,10 @@
-script(type='text/javascript')
 
-  $('document').ready(function(){
-    for(var i=0;i<5;i++) {
-      $('#list').append(jade.render('_list', {list: i}));
-    }
-  });
+h3 Latest coderz snippets
 
-h1 Language Experiment
-
-#list
-
-form
-  label
-    span Username
-    input(type='text', name='username')
-  label
-    span Password
-    input(type='password',name='password', class='small')
-
-
-  input(type='submit',value=param1)
+ul#recentSnippets
+  each snippet in recentSnippets
+    li 
+      a(href='/snippet/#{snippet._id}')= snippet.name 
+      span(class='date') &nbsp;#{snippet.date}
+  
   

@@ -1,0 +1,6 @@
+/** Snippet page styles **/
+/*************************/
+p.tags a {
+  display: inline-block;
+  margin: 0 0.3em;
+}

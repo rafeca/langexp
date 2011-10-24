@@ -75,6 +75,18 @@ a {
 a:hover {
   color: #0092cc;
 }
+strong {
+  font-weight: bold;
+}
+pre {
+  font-family: "Bitstream Vera Sans Mono", "Courier", monospace;
+  padding: 2em;
+  border: 1px solid #999;
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  border-radius: 1em;
+  margin-top: 2em;
+}
 #footer {
   text-align: right;
 }
@@ -145,6 +157,8 @@ form input[type=button] {
   border: 1px solid #aaa;
   padding: 0.3em 0.6em;
   margin-left: 11em;
+  text-decoration: none;
+  color: #333;
 }
 form button:hover,
 form a.button:hover,
@@ -164,4 +178,35 @@ form a.button::-moz-focus-inner,
 form input[type=submit]::-moz-focus-inner,
 form input[type=button]::-moz-focus-inner {
   border: 0;
+}
+/** Flash messages **/
+/********************/
+#messages ul {
+  padding: 0.5em;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+#messages .error {
+  background-color: #f99;
+}
+#messages .info {
+  background-color: #b3ffb3;
+}
+/** Login Box **/
+/***************/
+form#login {
+  font-size: 0.8em;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 24em;
+}
+form#login label {
+  margin-bottom: 0.5em;
+}
+#logged {
+  position: absolute;
+  right: 2em;
+  top: 2em;
 }

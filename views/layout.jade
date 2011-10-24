@@ -1,10 +1,35 @@
 !!! 5
 html(lang='en')
   head
-    title Language Experiment
+    title Ninja Coderz
     link(rel='stylesheet', href='/stylesheets/reset.css')
     link(rel='stylesheet', href='/stylesheets/layout.css')
     script(src='/javascripts/jquery-1.6.4.min.js')
     script(src='/javascripts/jade.min.js')
     script(src='/javascripts/jade.tmpl.js')
-  body!= body
+  body
+  
+    #header
+      - if (!session.user)
+        form#login(action='/login', method='post')
+          label
+            span Username
+            input(type='text', name='username')
+          label
+            span Password
+            input(type='password',name='password')
+        
+          label
+            input(type='submit',value='Login!')
+          label
+            a(class="button",href='/signup') register
+      - else
+        #logged Welcome #{session.user.username}, 
+          a(href='/logout') Logout
+
+      h1 
+        a(href='/') Ninja Coderz
+  
+    != messages()
+  
+    #body!= body

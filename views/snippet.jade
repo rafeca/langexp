@@ -1,0 +1,17 @@
+link(rel='stylesheet', href='/stylesheets/snippet.css')
+
+h2= snippet.name
+
+p
+  strong Description: 
+  =snippet.description
+p
+  strong Date: 
+  =snippet.date
+
+p.tags 
+  strong Tags: 
+  - each tag in snippet.tags
+    a(href='/tag/#{tag.name}')= tag.name 
+pre
+  code= snippet.code
