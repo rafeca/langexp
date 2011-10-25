@@ -1,5 +1,6 @@
 var Backend = require('../models/backend.js');
 var Snippet = Backend.Snippet;
+var User = Backend.User;
 
 describe("Snippets Model", function() {
   
@@ -7,16 +8,20 @@ describe("Snippets Model", function() {
   
   it("Creates a snippet correctly", function() {
     
-    Snippet.create('code1', 'description', 'var lala = "aa";', ["tag1", "tag2"], function(err, data){
+    User.register('user1', 'password', 'email@email.com', function(err, user){
+
+      Snippet.create(user._id, 'code1', 'description', 'var lala = "aa";', ["tag1", "tag2"], function(err, data){
     
-      expect(err).toBe(null);
-      expect(data.name).toEqual('code1');
-      expect(data.tags[0].name).toEqual('tag1');
-      expect(data.tags[1].name).toEqual('tag2');
+        expect(err).toBe(null);
+        expect(data.name).toEqual('code1');
+        expect(data.tags[0].name).toEqual('tag1');
+        expect(data.tags[1].name).toEqual('tag2');
+        expect(data.creatorId).toEqual(user._id);
       
-      snippetId = data._id;
+        snippetId = data._id;
     
-      asyncSpecDone();
+        User.remove('user1', asyncSpecDone);
+      });
     });
     
     asyncSpecWait();

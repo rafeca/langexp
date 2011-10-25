@@ -2,6 +2,7 @@
  * Module dependencies.
  */
 var express = require('express');
+var Step = require('step');
 
 var app = module.exports = express.createServer();
 
@@ -127,48 +128,65 @@ app.get('/snippet/:id', refreshSession, function(req, res){
 });
 
 app.get('/user/:username', refreshSession, function(req, res){
+
+  var finalUser = null;
+  var snippets = null;
   var username = req.params.username;
   
-  Backend.User.findByUsername(username, function(err, user){  
-    if (!user) {
-      req.flash('error', 'This user does not exist');
-      res.redirect('/');
-      return;
-    }
-    
-    // Reverse activites to sort them from most recent to oldest
-    user.activities = user.activities.reverse();
-    
-    // Check if visited username is the same as the currently
-    // logged username to update last visit date
-    if (req.session.user && req.session.user.username === username) {
-      user.activities.map(function(activity){
-        if (activity.date.getTime() > user.dateLatestVisit.getTime()) {
-          activity.unread = true;
-        } else {
-          activity.unread = false;
-        }
-      });
-  
-      // Don't pass a callback as we don't really want to exec this synchronously
-      Backend.User.updateDateLatestVisit(req.session.user.username);
-      
-      // Reset the unread activities counter (user is viewing his own profile)
-      req.session.user.unreadActivities = 0;
-    }
+  Step(
+    function getUsername(){
 
-    Backend.Snippet.findByCreator(user._id, function(err, snippets){
+      Backend.User.findByUsername(username, this);
+    },
+    function (err, user) {
+      if (!user) {
+        throw("User not found");
+      }
       if (err) {
+        throw err;
+      }
+      
+      // Reverse activites to sort them from most recent to oldest
+      user.activities = user.activities.reverse();
+      
+      // Check if visited username is the same as the currently
+      // logged username to update last visit date
+      if (req.session.user && req.session.user.username === username) {
+        user.activities.map(function(activity){
+          if (activity.date.getTime() > user.dateLatestVisit.getTime()) {
+            activity.unread = true;
+          } else {
+            activity.unread = false;
+          }
+        });
+
+        // Don't pass a callback as we don't really want to exec this synchronously
+        Backend.User.updateDateLatestVisit(req.session.user.username);
+
+        // Reset the unread activities counter (user is viewing his own profile)
+        req.session.user.unreadActivities = 0;
+      }
+      return user;
+    },
+    function (err, user) {
+      if (err) {
+        throw err;
+      }
+      
+      finalUser = user;
+      Backend.Snippet.findByCreator(user._id, this);
+    },
+    function (err, snippets) {
+      if (err) {
+        console.log(err.stack);
         req.flash('error', err);
         res.redirect('/');
         return;
       }
-    
-      res.render('profile', {snippets: snippets, user: user});
-    });
-  });
+      res.render('profile', {snippets: snippets, user: finalUser});
+    } 
+  );
 });
-
 
 app.post('/create_message', function(req, res){
   if (typeof req.session.user === 'undefined' || req.session.user === null) {
@@ -234,7 +252,6 @@ app.post('/new_comment', function(req,res){
   
   // Get destination user
   Backend.User.findByUsername(req.body.username, function(err, user){
-    
     Backend.User.addCommentToActivity(user, req.body.activityId, req.body.text, req.session.user.username, function(err){
       if (err) {
         req.flash('error', err);

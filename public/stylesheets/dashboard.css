@@ -26,6 +26,7 @@ form label input[type="text"].big {
 #myActivity .unread,
 #mySnippets .unread {
   background-color: #ff9;
+  padding: 0.3em 0;
 }
 #myActivity .comments,
 #mySnippets .comments {
