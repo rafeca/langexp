@@ -10,11 +10,6 @@ var app = module.exports = express.createServer();
  * Express Configuration
  */
 app.configure('development', function(){
-  app.use(require("./jadeify")({
-    jsFile: '/javascripts/jade.tmpl.js',
-    tmplFolder: __dirname + '/views/templates',
-    publicFolder: __dirname + '/public'
-  }));
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
 
@@ -265,5 +260,5 @@ app.post('/new_comment', function(req,res){
 });
 
 
-app.listen(12110);
+app.listen(80);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

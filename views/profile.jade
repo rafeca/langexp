@@ -59,7 +59,7 @@ link(rel='stylesheet', href='/stylesheets/dashboard.css')
         a(href='/snippet/#{snippet._id}')= snippet.name 
         span(class='date') &nbsp;#{snippet.date}
 
-  - if (session.user && user._id == session.user._id)
+  - if (session.user && user.username == session.user.username)
     a(href='/new_snippet', class='createSnippet') New snippet
 
 .clear
