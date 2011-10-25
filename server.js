@@ -2,7 +2,6 @@
  * Module dependencies.
  */
 var express = require('express');
-var connFu = require('connfu');
 
 var app = module.exports = express.createServer();
 
