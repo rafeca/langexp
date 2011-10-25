@@ -24,7 +24,8 @@ var UserSchema = new Schema({
   email: String,
   followingIds: [ObjectId],
   activities: [UserActivitySchema],
-  dateLatestVisit: Date
+  dateLatestVisit: Date,
+  unreadActivities: Number
 });
 
 // Associate the User Schema to a Mongoose model
@@ -60,7 +61,8 @@ var UserBackend = function() {
           username: username,
           password: password,
           email: email,
-          dateLatestVisit: new Date()
+          dateLatestVisit: new Date(),
+          unreadActivities: 0,
         });
         user.save(function(err){
           callback(err, user);
@@ -98,6 +100,9 @@ var UserBackend = function() {
           return;
         }
         
+        // Reset the unreadActivities counter
+        user.unreadActivities = 0;
+        
         user.dateLatestVisit = new Date();
         user.save(callback);
       });
@@ -114,6 +119,9 @@ var UserBackend = function() {
       });
       
       user.activities.push(activity);
+      
+      // Increment the unreadActivities counter
+      user.unreadActivities++;
       
       user.save(function(err){
         callback(err, user);

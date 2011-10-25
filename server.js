@@ -47,11 +47,28 @@ app.configure('production', function(){
 });
 
 /**
- * Global vars (to mantain state)
+ * Iniitialize Backend
  */
 var Backend = require('./models/backend');
 
-app.get('/', function(req, res) {
+/**
+ * Method to refresh user info into session
+ */
+var refreshSession = function(req, res, next){
+ if (req.session.user) {
+   Backend.User.findByUsername(req.session.user.username, function(err, user){
+     if (!err && user) {
+       req.session.user = user;
+     }
+     next();
+   });
+ } else {
+   next();
+ }
+};
+
+
+app.get('/', refreshSession, function(req, res) {
   Backend.Snippet.findRecent(10, function(err, data){
     res.render('index', {recentSnippets: data});
   });
@@ -62,7 +79,6 @@ app.get('/signup', function(req, res){
 });
 
 app.post('/signup', function(req, res){
-  
   Backend.User.register(req.body.username, req.body.password, req.body.email, function(err, data){
     if (err) {
       req.flash('error', err);
@@ -82,7 +98,7 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
-app.post('/login', function(req, res){
+app.post('/login', refreshSession, function(req, res){
   Backend.User.authenticate(req.body.username, req.body.password, function(err, data){
     if (err) {
       req.flash('error', err);
@@ -91,12 +107,12 @@ app.post('/login', function(req, res){
       // Store user into session
       req.session.user = data;
       req.flash('info', 'You have logged in successfully');
-      res.redirect('/user/' + req.session.user.username);
+      res.redirect('/');
     }
   });
 });
 
-app.get('/snippet/:id', function(req, res){
+app.get('/snippet/:id', refreshSession, function(req, res){
   Backend.Snippet.findById(req.params.id, function(err, data){
     if (err) {
       req.flash('error', err);
@@ -110,7 +126,7 @@ app.get('/snippet/:id', function(req, res){
   });
 });
 
-app.get('/user/:username', function(req, res){
+app.get('/user/:username', refreshSession, function(req, res){
   var username = req.params.username;
   
   Backend.User.findByUsername(username, function(err, user){  
@@ -136,6 +152,9 @@ app.get('/user/:username', function(req, res){
   
       // Don't pass a callback as we don't really want to exec this synchronously
       Backend.User.updateDateLatestVisit(req.session.user.username);
+      
+      // Reset the unread activities counter (user is viewing his own profile)
+      req.session.user.unreadActivities = 0;
     }
 
     Backend.Snippet.findByCreator(user._id, function(err, snippets){
@@ -179,7 +198,7 @@ app.post('/create_message', function(req, res){
   });
 });
 
-app.get('/new_snippet', function(req, res){
+app.get('/new_snippet', refreshSession, function(req, res){
   res.render('new_snippet');
 });
 
@@ -226,7 +245,6 @@ app.post('/new_comment', function(req,res){
       res.redirect('/user/' + req.body.username);
     });
   });
-  
 });
 
 

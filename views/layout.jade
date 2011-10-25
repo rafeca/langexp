@@ -24,8 +24,8 @@ html(lang='en')
           label
             a(class="button",href='/signup') register
       - else
-        #logged Welcome 
-          a(href='/user/#{session.user.username}') #{session.user.username}
+        #logged Welcome #{session.user.username} 
+          a(href='/user/#{session.user.username}') (#{session.user.unreadActivities} unread messages)
           , 
           a(href='/logout') Logout
 
