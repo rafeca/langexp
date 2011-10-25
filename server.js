@@ -112,12 +112,30 @@ app.get('/snippet/:id', function(req, res){
 
 app.get('/user/:username', function(req, res){
   var username = req.params.username;
-
+  
   Backend.User.findByUsername(username, function(err, user){  
     if (!user) {
       req.flash('error', 'This user does not exist');
       res.redirect('/');
       return;
+    }
+    
+    // Reverse activites to sort them from most recent to oldest
+    user.activities = user.activities.reverse();
+    
+    // Check if visited username is the same as the currently
+    // logged username to update last visit date
+    if (req.session.user && req.session.user.username === username) {
+      user.activities.map(function(activity){
+        if (activity.date.getTime() > user.dateLatestVisit.getTime()) {
+          activity.unread = true;
+        } else {
+          activity.unread = false;
+        }
+      });
+  
+      // Don't pass a callback as we don't really want to exec this synchronously
+      Backend.User.updateDateLatestVisit(req.session.user.username);
     }
 
     Backend.Snippet.findByCreator(user._id, function(err, snippets){
@@ -149,7 +167,7 @@ app.post('/create_message', function(req, res){
       return;
     }
     
-    Backend.User.addActivity(destination, 'comment', req.body.text, req.session.user._id, null, function(err){
+    Backend.User.addActivity(destination, 'comment', req.body.text, req.session.user.username, null, function(err){
       if (err) {
         req.flash('error', err);
         res.redirect('/');
@@ -186,6 +204,31 @@ app.post('/new_snippet', function(req, res){
       res.redirect('/snippet/' + snippet._id);
   });
 });
+
+app.post('/new_comment', function(req,res){
+  
+  if (typeof req.session.user === 'undefined' || req.session.user === null) {
+    req.flash('error', 'You have to login to access this page');
+    res.redirect('/');
+    return;
+  }
+  
+  // Get destination user
+  Backend.User.findByUsername(req.body.username, function(err, user){
+    
+    Backend.User.addCommentToActivity(user, req.body.activityId, req.body.text, req.session.user.username, function(err){
+      if (err) {
+        req.flash('error', err);
+        res.redirect('/');
+        return;
+      }
+      
+      res.redirect('/user/' + req.body.username);
+    });
+  });
+  
+});
+
 
 app.listen(12110);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

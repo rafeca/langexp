@@ -2,12 +2,20 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
+
+var CommentSchema = new Schema({
+  text: String,
+  date: Date,
+  origin: String
+});
+
 var UserActivitySchema = new Schema({
   type: {type: String, enum: ['new_snippet', 'edit_snippet', 'delete_snippet', 'comment']},
   text: String,
   date: Date,
-  origin: ObjectId,
-  referenceId: ObjectId
+  origin: String,
+  referenceId: ObjectId,
+  comments: [CommentSchema]
 });
 
 var UserSchema = new Schema({
@@ -15,20 +23,27 @@ var UserSchema = new Schema({
   password: String,
   email: String,
   followingIds: [ObjectId],
-  activities: [UserActivitySchema]
+  activities: [UserActivitySchema],
+  dateLatestVisit: Date
 });
 
 // Associate the User Schema to a Mongoose model
 mongoose.model('User', UserSchema);
 mongoose.model('UserActivity', UserActivitySchema);
+mongoose.model('Comment', CommentSchema);
 
 var UserBackend = function() {
   
   // Instanciate the Mongoose model
   var User = mongoose.model('User');
   var UserActivity = mongoose.model('UserActivity');
+  var Comment = mongoose.model('Comment');
 
   var public = {
+    findById: function(userId, callback){
+      User.findOne({_id: userId}, callback);
+    },
+    
     findByUsername: function(username, callback){
       User.findOne({username: username}, callback);
     },
@@ -44,7 +59,8 @@ var UserBackend = function() {
         var user = new User({
           username: username,
           password: password,
-          email: email
+          email: email,
+          dateLatestVisit: new Date()
         });
         user.save(function(err){
           callback(err, user);
@@ -74,18 +90,45 @@ var UserBackend = function() {
       });
     },
     
-    addActivity: function(user, type, text, originId, referenceId, callback){      
+    updateDateLatestVisit: function(username, callback) {
+      
+      public.findByUsername(username, function(err, user){
+        if(!user) {
+          callback('User not found');
+          return;
+        }
+        
+        user.dateLatestVisit = new Date();
+        user.save(callback);
+      });
+    },
+    
+    addActivity: function(user, type, text, origin, referenceId, callback){      
       
       var activity = new UserActivity({
         type: type,
         text: text,
         date: new Date(),
-        origin: originId,
+        origin: origin,
         referenceId: referenceId
       });
       
       user.activities.push(activity);
       
+      user.save(function(err){
+        callback(err, user);
+      });
+    },
+    
+    addCommentToActivity: function(user, activityId, text, origin, callback) {
+      
+      var comment = new Comment({
+        text: text,
+        origin: origin,
+        date: new Date()
+      });
+      
+      user.activities.id(activityId).comments.push(comment);
       user.save(function(err){
         callback(err, user);
       });

@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 var Tag = require('./Tag.js');
+var User = require('./User.js');
 
 var TagSchema = new Schema({
   name: String
@@ -59,7 +60,13 @@ var SnippetBackend = function() {
               date: new Date()
             });
             snippet.save(function(err){
-              callback(err, snippet);
+              
+              // Save activity inside user
+              User.findById(creatorId, function(err, user){
+                User.addActivity(user, "new_snippet", snippet.name, user.username, snippet._id, function(err){
+                  callback(err, snippet);
+                });
+              });
             });
           }
         })

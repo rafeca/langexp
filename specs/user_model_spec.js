@@ -3,14 +3,7 @@ var User = Backend.User;
 
 describe("User Model", function() {
   
-  /*
-  beforeEach(function(){
-    runs(function(){
-      
-      // Delete a possible created user from another test
-      User.remove('user1', function(data){});
-    });
-  });*/
+  var activityId = null;
   
   it("register a user correctly", function() {
     
@@ -69,7 +62,7 @@ describe("User Model", function() {
     asyncSpecWait();
   });
   
-  it("Adds a new comment to a user from the same user", function(){
+  it("Adds a new activity to a user from the same user", function(){
   
     User.findByUsername('user1', function(err, user){
       
@@ -79,6 +72,7 @@ describe("User Model", function() {
         
         expect(err).toEqual(null);
         expect(data.activities[0].text).toEqual("Hello, world!");
+        activityId = data.activities[0]._id;
         
         asyncSpecDone();
       });
@@ -87,6 +81,23 @@ describe("User Model", function() {
     asyncSpecWait();
   });
   
+  it("Adds a new comment to an activity", function(){
+  
+    User.findByUsername('user1', function(err, user){
+      
+      expect(user).toNotBe(null);
+      
+      User.addCommentToActivity(user, activityId, "comment", user._id, function(err, data){
+        
+        expect(err).toEqual(null);
+        expect(data.activities[0].comments[0].text).toEqual("comment");
+        
+        asyncSpecDone();
+      });
+      
+    });
+    asyncSpecWait();
+  });
   
   it("removes a user correctly", function() {
     

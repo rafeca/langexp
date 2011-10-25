@@ -15,12 +15,35 @@ form label input[type="text"].big {
 #myActivity,
 #mySnippets {
   float: left;
-  width: 28em;
+  width: 27em;
   margin-top: 2em;
+  margin-right: 1em;
 }
 #myActivity .date,
 #mySnippets .date {
   font-size: 0.8em;
+}
+#myActivity .unread,
+#mySnippets .unread {
+  background-color: #ff9;
+}
+#myActivity .comments,
+#mySnippets .comments {
+  margin-left: 2em;
+}
+#myActivity .comments ul,
+#mySnippets .comments ul {
+  margin-top: 1em;
+}
+#myActivity .comments li,
+#mySnippets .comments li {
+  background-color: #ddd;
+  margin-top: 0.05em;
+}
+#myActivity .comments input,
+#mySnippets .comments input {
+  margin: 0 0.5em 0 0;
+  display: inline-block;
 }
 .createSnippet {
   display: inline-block;

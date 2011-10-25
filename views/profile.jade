@@ -1,5 +1,12 @@
 link(rel='stylesheet', href='/stylesheets/dashboard.css')
 
+
+
+- if (session.user && session.user.username === user.username)
+  h2 My Profile
+- else
+  h2 #{user.username}'s Profile
+
 - if (session.user)
   form(action='/create_message', method='post')
 
@@ -17,14 +24,30 @@ link(rel='stylesheet', href='/stylesheets/dashboard.css')
 
   ul
     each item in user.activities
-      li
+      li(class=item.unread ? 'unread' : '')
         - if (item.type !== 'comment')
           a(href='/snippet/#{item.referenceId}')= item.type 
         - else
           #{item.type}
-        span(class='text') &nbsp;#{item.text}
+        span(class='text') &nbsp;#{item.text} by 
+        a(href='/user/#{item.origin}') #{item.origin}
         br
         span(class='date') &nbsp;#{item.date}
+        
+        div.comments
+          ul
+            each comment in item.comments
+              li
+                span #{comment.text} by #{comment.origin}
+                br
+                span.date= comment.date
+          - if (session.user)
+            form(action='/new_comment',method='post')
+              input(type='hidden',name='activityId',value=item._id)
+              input(type='hidden',name='username',value=user.username)
+              input(type='text',name='text')
+              input(type='submit',value='Comment!')
+        
 
 #mySnippets
   h3
