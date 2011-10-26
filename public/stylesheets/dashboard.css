@@ -1,15 +1,15 @@
-form label {
+#body form label {
   float: none;
 }
-form label span {
+#body form label span {
   float: none;
 }
-form label input,
-form label input[type="submit"] {
+#body form label input,
+#body form label input[type="submit"] {
   display: inline-block;
   margin: 0 1em 0 0;
 }
-form label input[type="text"].big {
+#body form label input[type="text"].big {
   width: 40em;
 }
 #myActivity,

@@ -5,8 +5,6 @@ html(lang='en')
     link(rel='stylesheet', href='/stylesheets/reset.css')
     link(rel='stylesheet', href='/stylesheets/layout.css')
     script(src='/javascripts/jquery-1.6.4.min.js')
-    script(src='/javascripts/jade.min.js')
-    script(src='/javascripts/jade.tmpl.js')
   body
   
     #header
@@ -19,10 +17,10 @@ html(lang='en')
             span Password
             input(type='password',name='password')
         
-          label
+          label(style='position:relative')
             input(type='submit',value='Login!')
-          label
-            a(class="button",href='/signup') register
+            a(href='/signup',style="position:absolute;top:7px;right:40px") register
+            
       - else
         #logged Welcome #{session.user.username} 
           a(href='/user/#{session.user.username}') (#{session.user.unreadActivities} unread messages)

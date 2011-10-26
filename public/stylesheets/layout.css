@@ -190,6 +190,10 @@ form input[type=button]::-moz-focus-inner {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
+  margin-bottom: 20px;
+}
+#messages li {
+  margin: 0;
 }
 #messages .error {
   background-color: #f99;
